@@ -1,0 +1,45 @@
+library(dplyr)
+library(tidyverse)
+
+# 1. Linear Regression to Predict MPG
+# Import and Read the csv file to DataFrame
+mechacar_table<- read.csv('MechaCar_mpg.csv', stringsAsFactors = F, check.names=F)# import MechaCar dataest
+head(mechacar_table)
+
+# Perform Multiple linear regression  for All six variables
+lm(formula=mpg~vehicle_length + vehicle_weight + spoiler_angle + ground_clearance + AWD, data=mechacar_table)
+
+# use the Summary () determine the p-value and the r-squared value for the linear regression model 
+summary(lm(formula=mpg~vehicle_length + vehicle_weight + spoiler_angle + ground_clearance + AWD, data=mechacar_table))
+#..............................................................................................................................................................
+
+# 2. Create Visualizations for the Trip Analysis:
+# Download  and Read Suspension_Coil.csv file
+suspension_coil_data<- read.csv('Suspension_Coil.csv', check.names = F, stringsAsFactors = F)
+head(suspension_coil_data)
+
+# create Summary for the data
+total_summary <- suspension_coil_data %>% summarize(Mean=mean(PSI), Median=median(PSI), Variance=var(PSI), SD=sd(PSI), .groups='keep')
+
+# Create summary for each lot
+lot_summary<-suspension_coil_data%>% group_by(Manufacturing_Lot)%>%summarize(Mean=mean(PSI), Median=median(PSI), Variance=var(PSI), SD=sd(PSI), .groups='keep')
+
+#..............................................................................................................................................................
+
+# 3. T-Tests on Suspension Coils
+#1.using the t.test() function to determine if the PSI across all manufacturing lots 
+# is statistically different from the population 
+# mean of 1,500 pounds per square inch.
+
+t.test(suspension_coil_data$PSI, mu=1500)
+
+# 2. using the t.test() function and its subset() argument to 
+#determine if the PSI for each manufacturing lot is 
+#statistically different from the population mean of 1,500 pounds per square inch
+
+t.test(subset(suspension_coil_data, Manufacturing_Lot== "Lot1")$PSI, mu=1500)
+t.test(subset(suspension_coil_data, Manufacturing_Lot== "Lot2")$PSI, mu=1500)
+t.test(subset(suspension_coil_data, Manufacturing_Lot== "Lot3")$PSI, mu=1500)
+
+
+
